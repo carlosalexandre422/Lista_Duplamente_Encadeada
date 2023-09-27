@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lista Duplamente Encadeada</title>
+  <style>
+    /* Estilos básicos */
+    body {
+      font-family: Roboto;
+      display: flex;
+    }
+    .container {
+      margin: 20px;
+    }
+    .list-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .list-item {
+      display: inline-block;
+      margin-right: 10px;
+      background-color: #8dc0e2;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      transition: all, 0.3s;
+    }
+    button:hover, .list-item:hover {
+      background-color: #455c6d;
+    }
+    .arrow {
+      color: #3498db;
+      width: 20px;
+      height: 20px;
+      margin: 0 10px;
+    }
+    button{
+      background-color: #3498db;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      border: none;
+      margin-right: 10px;
+      transition: all, 0.3s;
+    }
+    h2{
+      color: #204158;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Lista Duplamente Encadeada</h2>
+    <button onclick="inserirElemento()">Inserir Elemento</button>
+    <button onclick="inserirInicio()">Inserir Início</button>
+    <button onclick="inserirFinal()">Inserir Final</button>
+    <br><br>
+    <button onclick="removerElemento()">Remover Elemento</button>
+    <button onclick="removerInicio()">Remover Início</button>
+    <button onclick="removerFinal()">Remover Final</button>
+    <br><br>
+    <button onclick="consultarPorValor()">Consultar por Valor</button>
+    <button onclick="consultarPorPosicao()">Consultar por Posição</button>
+    <br><br><br>
+    <div class="list-container" id="listContainer">
+      <!-- Lista será exibida aqui -->
+    </div>
+  </div>
+
+  <script>
+    class No {
+      constructor() {
+        this.conteudo = 0;
+        this.prox = null;
+        this.ant = null;
+      }
+
+      getConteudo() {
+        return this.conteudo;
+      }
+
+      setConteudo(valor) {
+        this.conteudo = valor;
+      }
+
+      getProx() {
+        return this.prox;
+      }
+
+      setProx(proximoNo) {
+        this.prox = proximoNo;
+      }
+
+      getAnt() {
+        return this.ant;
+      }
+
+      setAnt(anteriorNo) {
+        this.ant = anteriorNo;
+      }
+    }
+
+    class LDE {
+      constructor() {
+        this.inicio = null;
+        this.fim = null;
+        this._tamanho = 0;
+      }
+
+      vazia() {
+        return this._tamanho === 0;
+      }
+
+      getTamanho() {
+        return this._tamanho;
+      }
+
+      elemento(pos) {
+        let aux = this.inicio;
+        let cont = 1;
+
+        if (this.vazia()) {
+          return -1; // Consulta falhou
+        }
+
+        if (pos < 1 || pos > this.getTamanho() || isNaN(pos)) {
+          return -1; // Posicao invalida
+        }
+
+        while (cont < pos) {
+          aux = aux.getProx();
+          cont++;
+        }
+
+        return aux.getConteudo();
+      }
+
+      posicao(dado) {
+        let cont = 1;
+        let aux;
+
+        if (this.vazia() || isNaN(dado)) {
+          return -1;
+        }
+
+        aux = this.inicio;
+        while (aux !== null) {
+          if (aux.getConteudo() === dado) {
+            return cont;
+          }
+
+          aux = aux.getProx();
+          cont++;
+        }
+
+        return -1;
+      }
+
+      insereInicioLista(valor) {
+        if (isNaN(valor)) {
+          return false;
+        }
+
+        let novoNo = new No();
+        novoNo.setConteudo(valor);
+        novoNo.setProx(this.inicio);
+        novoNo.setAnt(null);
+
+        if (this.vazia()) {
+          this.fim = novoNo;
+        } else {
+          this.inicio.setAnt(novoNo);
+        }
+
+        this.inicio = novoNo;
+        this._tamanho++;
+        return true;
+      }
+
+      insereMeioLista(pos, dado) {
+        let cont = 1;
+        let novoNo = new No();
+        novoNo.setConteudo(dado);
+        let aux = this.inicio;
+
+        while (cont < pos - 1 && aux !== null) {
+          aux = aux.getProx();
+          cont++;
+        }
+
+        if (aux === null) {
+          return false; // pos. inválida
+        }
+
+        novoNo.setAnt(aux);
+        novoNo.setProx(aux.getProx());
+
+        if (aux.getProx() !== null) {
+          aux.getProx().setAnt(novoNo);
+        }
+
+        aux.setProx(novoNo);
+
+        this._tamanho++;
+        return true;
+      }
+
+      insereFimLista(valor) {
+        if (isNaN(valor)) {
+          return false;
+        }
+
+        let novoNo = new No();
+        novoNo.setConteudo(valor);
+
+        if (this.vazia()) {
+          novoNo.setProx(null);
+          novoNo.setAnt(null);
+          this.inicio = novoNo;
+          this.fim = novoNo;
+        } else {
+          novoNo.setProx(null);
+          novoNo.setAnt(this.fim);
+          this.fim.setProx(novoNo);
+          this.fim = novoNo;
+        }
+
+        this._tamanho++;
+        return true;
+      }
+
+      insere(pos, dado) {
+        if (this.vazia() && pos !== 1 || isNaN(dado)) {
+          return false; /* lista vazia mas posicao inv */
+        }
+
+        if (pos === 1) {
+          return this.insereInicioLista(dado);
+        } else if (pos === this.getTamanho() + 1) {
+          return this.insereFimLista(dado);
+        } else {
+          return this.insereMeioLista(pos, dado);
+        }
+      }
+
+      removeInicioListaUnitaria() {
+        let dado = this.inicio.getConteudo();
+        this.inicio = null;
+        this.fim = null;
+        this._tamanho--;
+        return dado;
+      }
+
+      removeInicioLista() {
+        let p = this.inicio;
+        let dado = p.getConteudo();
+
+        this.inicio = p.getProx();
+        if (this.inicio !== null) {
+          this.inicio.setAnt(null);
+        }
+
+        this._tamanho--;
+
+        p = null;
+
+        return dado;
+      }
+
+      removeMeioLista(pos) {
+        let p = this.inicio;
+        let n = 1;
+
+        while (n < pos && p !== null) {
+          p = p.getProx();
+          n++;
+        }
+
+        if (p === null) {
+          return -1; // pos. inválida
+        }
+
+        let dado = p.getConteudo();
+
+        if (p.getAnt() !== null) {
+          p.getAnt().setProx(p.getProx());
+        }
+
+        if (p.getProx() !== null) {
+          p.getProx().setAnt(p.getAnt());
+        }
+
+        this._tamanho--;
+
+        p = null;
+        return dado;
+      }
+
+      removeFimLista() {
+        let p = this.fim;
+        let dado = p.getConteudo();
+
+        if (p.getAnt() !== null) {
+          p.getAnt().setProx(null);
+          this.fim = p.getAnt();
+        } else {
+          this.inicio = null;
+          this.fim = null;
+        }
+
+        this._tamanho--;
+
+        p = null;
+        return dado;
+      }
+
+      remove(pos) {
+        if (this.vazia() || isNaN(pos)) {
+          return -1;
+        }
+
+        if (pos === 1 && this.getTamanho() === 1) {
+          return this.removeInicioListaUnitaria();
+        } else if (pos === 1) {
+          return this.removeInicioLista();
+        } else if (pos === this.getTamanho()) {
+          return this.removeFimLista();
+        } else {
+          return this.removeMeioLista(pos);
+        }
+      }
+    }
+
+    const lista = new LDE();
+    const listContainer = document.getElementById('listContainer');
+
+    function renderizarLista() {
+      listContainer.innerHTML = '';
+      let aux = lista.inicio;
+      while (aux !== null) {
+        const listItem = document.createElement('div');
+        listItem.className = 'list-item';
+        listItem.textContent = aux.getConteudo();
+        listContainer.appendChild(listItem);
+
+        // Adicione o símbolo de bi-condicional (↔) se houver um próximo elemento
+        if (aux.getProx() !== null) {
+          const arrow = document.createElement('span');
+          arrow.className = 'arrow';
+          arrow.textContent = '↔';
+          listContainer.appendChild(arrow);
+        }
+
+        aux = aux.getProx();
+      }
+    }
+
+    function inserirElemento() {
+      const pos = parseInt(prompt('Digite a posição de inserção:'));
+      const valor = parseInt(prompt('Digite o valor a ser inserido:'));
+      const sucesso = lista.insere(pos, valor);
+      if (sucesso) {
+        alert('Elemento inserido com sucesso!');
+      } else {
+        alert('Inserção falhou.');
+      }
+      renderizarLista();
+    }
+
+    function removerElemento() {
+      const pos = parseInt(prompt('Digite a posição de remoção:'));
+      const valorRemovido = lista.remove(pos);
+      if (valorRemovido !== -1) {
+        alert(`Elemento ${valorRemovido} removido com sucesso!`);
+      } else {
+        alert('Remoção falhou.');
+      }
+      renderizarLista();
+    }
+
+    function consultarPorValor() {
+      const valor = parseInt(prompt('Digite o valor a ser consultado:'));
+      const posicao = lista.posicao(valor);
+      if (posicao !== -1) {
+        alert(`O valor ${valor} está na posição ${posicao}`);
+      } else {
+        alert('Valor não encontrado na lista.');
+      }
+    }
+
+    function consultarPorPosicao() {
+      const pos = parseInt(prompt('Digite a posição a ser consultada:'));
+      const elemento = lista.elemento(pos);
+      if (elemento !== -1) {
+        alert(`O elemento na posição ${pos} é ${elemento}`);
+      } else {
+        alert('Posição inválida.');
+      }
+    }
+
+    function inserirInicio() {
+      const valor = parseInt(prompt('Digite o valor a ser inserido no início:'));
+      const sucesso = lista.insereInicioLista(valor);
+      if (sucesso) {
+          alert('Elemento inserido no início com sucesso!');
+      } else {
+          alert('Inserção no início falhou.');
+      }
+      renderizarLista();
+    }
+
+    function inserirFinal() {
+      const valor = parseInt(prompt('Digite o valor a ser inserido no final:'));
+      const sucesso = lista.insereFimLista(valor);
+      if (sucesso) {
+          alert('Elemento inserido no final com sucesso!');
+      } else {
+          alert('Inserção no final falhou.');
+      }
+      renderizarLista();
+    }
+
+    function removerInicio() {
+        if (lista.vazia()) {
+            alert('A lista está vazia. Não é possível remover do início.');
+            return;
+        }
+
+        const valorRemovido = lista.removeInicioLista();
+        if (valorRemovido !== -1) {
+            alert(`Elemento ${valorRemovido} removido do início com sucesso!`);
+        } else {
+            alert('Remoção do início falhou.');
+        }
+        renderizarLista();
+    }
+
+    function removerFinal() {
+      const valorRemovido = lista.remove(lista.getTamanho());
+      if (valorRemovido !== -1) {
+          alert(`Elemento ${valorRemovido} removido do final com sucesso!`);
+      } else {
+          alert('Remoção do final falhou.');
+      }
+      renderizarLista();
+    }
+
+    renderizarLista(); // Renderizar a lista inicial
+  </script>
+</body>
+</html>
