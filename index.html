@@ -164,6 +164,7 @@
 
       insereInicioLista(valor) {
         if (isNaN(valor)) {
+          alert('Valor inválido.');
           return false;
         }
 
@@ -195,6 +196,7 @@
         }
 
         if (aux === null) {
+          alert('Posição inválida.');
           return false; // pos. inválida
         }
 
@@ -213,6 +215,7 @@
 
       insereFimLista(valor) {
         if (isNaN(valor)) {
+          alert('Valor inválido.');
           return false;
         }
 
@@ -237,6 +240,7 @@
 
       insere(pos, dado) {
         if (this.vazia() && pos !== 1 || isNaN(dado)) {
+          alert('Posição inválida ou valor inválido.');
           return false; /* lista vazia mas posicao inv */
         }
 
@@ -283,6 +287,7 @@
         }
 
         if (p === null) {
+          alert('Posição inválida.');
           return -1; // pos. inválida
         }
 
@@ -322,6 +327,7 @@
 
       remove(pos) {
         if (this.vazia() || isNaN(pos)) {
+          alert('Posição inválida ou lista vazia.');
           return -1;
         }
 
@@ -366,8 +372,6 @@
       const sucesso = lista.insere(pos, valor);
       if (sucesso) {
         alert('Elemento inserido com sucesso!');
-      } else {
-        alert('Inserção falhou.');
       }
       renderizarLista();
     }
@@ -377,8 +381,6 @@
       const valorRemovido = lista.remove(pos);
       if (valorRemovido !== -1) {
         alert(`Elemento ${valorRemovido} removido com sucesso!`);
-      } else {
-        alert('Remoção falhou.');
       }
       renderizarLista();
     }
@@ -389,7 +391,7 @@
       if (posicao !== -1) {
         alert(`O valor ${valor} está na posição ${posicao}`);
       } else {
-        alert('Valor não encontrado na lista.');
+        alert('Valor não encontrado.');
       }
     }
 
@@ -408,8 +410,6 @@
       const sucesso = lista.insereInicioLista(valor);
       if (sucesso) {
           alert('Elemento inserido no início com sucesso!');
-      } else {
-          alert('Inserção no início falhou.');
       }
       renderizarLista();
     }
@@ -419,8 +419,6 @@
       const sucesso = lista.insereFimLista(valor);
       if (sucesso) {
           alert('Elemento inserido no final com sucesso!');
-      } else {
-          alert('Inserção no final falhou.');
       }
       renderizarLista();
     }
@@ -434,8 +432,6 @@
         const valorRemovido = lista.removeInicioLista();
         if (valorRemovido !== -1) {
             alert(`Elemento ${valorRemovido} removido do início com sucesso!`);
-        } else {
-            alert('Remoção do início falhou.');
         }
         renderizarLista();
     }
@@ -448,8 +444,6 @@
         const valorRemovido = lista.removeFimLista();
         if (valorRemovido !== -1) {
             alert(`Elemento ${valorRemovido} removido do final com sucesso!`);
-        } else {
-            alert('Remoção do final falhou.');
         }
         renderizarLista();
       }
