@@ -441,14 +441,18 @@
     }
 
     function removerFinal() {
-      const valorRemovido = lista.remove(lista.getTamanho());
-      if (valorRemovido !== -1) {
-          alert(`Elemento ${valorRemovido} removido do final com sucesso!`);
-      } else {
-          alert('Remoção do final falhou.');
+        if (lista.vazia()) {
+            alert('A lista está vazia. Não é possível remover do final.');
+            return;
+        }
+        const valorRemovido = lista.removeFimLista();
+        if (valorRemovido !== -1) {
+            alert(`Elemento ${valorRemovido} removido do final com sucesso!`);
+        } else {
+            alert('Remoção do final falhou.');
+        }
+        renderizarLista();
       }
-      renderizarLista();
-    }
 
     renderizarLista(); // Renderizar a lista inicial
   </script>
