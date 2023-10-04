@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+  <!-- Estilização em css -->
   <title>Lista Duplamente Encadeada</title>
   <style>
     body {
@@ -8,15 +10,18 @@
       font-family: Roboto;
       display: flex;
     }
+
     .container {
       margin: 20px;
     }
+
     .list-container {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       align-items: center;
     }
+
     .list-item {
       display: inline-block;
       margin-right: 10px;
@@ -28,16 +33,20 @@
       font-size: 16px;
       transition: all, 0.3s;
     }
-    button:hover, .list-item:hover {
+
+    button:hover,
+    .list-item:hover {
       background-color: #455c6d;
     }
+
     .arrow {
       color: #204158;
       width: 20px;
       height: 20px;
       margin: 0 10px;
     }
-    button{
+
+    button {
       background-color: #3498db;
       color: white;
       padding: 5px 10px;
@@ -49,12 +58,20 @@
       font-size: 16px;
       transition: all, 0.3s;
     }
-    h2{
+
+    h2 {
       color: #204158;
+    }
+
+    .arrow {
+      color: #204158;
+      font-size: 20px;
     }
   </style>
 </head>
+
 <body>
+  <!-- Disposição dos botões em html -->
   <div class="container">
     <h2>Lista Duplamente Encadeada</h2>
     <button onclick="inserirElemento()">Inserir Elemento</button>
@@ -74,6 +91,7 @@
   </div>
 
   <script>
+    // CLASSE NO CONFORME VISTO EM SALA DE AULA
     class No {
       constructor() {
         this.conteudo = 0;
@@ -81,6 +99,7 @@
         this.ant = null;
       }
 
+      // Métodos getters e setters para o conteúdo, próximo nó e nó anterior
       getConteudo() {
         return this.conteudo;
       }
@@ -106,6 +125,7 @@
       }
     }
 
+    // CLASSE LDE CONFORME VISTO EM SALA DE AULA
     class LDE {
       constructor() {
         this.inicio = null;
@@ -113,14 +133,17 @@
         this._tamanho = 0;
       }
 
+      // Verifica se a lista está vazia
       vazia() {
         return this._tamanho === 0;
       }
 
+      // Retorna o tamanho da lista
       getTamanho() {
         return this._tamanho;
       }
 
+      // Retorna o elemento na posição especificada
       elemento(pos) {
         let aux = this.inicio;
         let cont = 1;
@@ -141,6 +164,7 @@
         return aux.getConteudo();
       }
 
+      // Retorna a posição do elemento especificado
       posicao(dado) {
         let cont = 1;
         let aux;
@@ -162,6 +186,7 @@
         return -1;
       }
 
+      // Insere um elemento no início da lista
       insereInicioLista(valor) {
         if (isNaN(valor)) {
           alert('Valor inválido.');
@@ -184,6 +209,7 @@
         return true;
       }
 
+      // Insere um elemento no meio da lista
       insereMeioLista(pos, dado) {
         let cont = 1;
         let novoNo = new No();
@@ -213,6 +239,7 @@
         return true;
       }
 
+      // Insere um elemento no final da lista
       insereFimLista(valor) {
         if (isNaN(valor)) {
           alert('Valor inválido.');
@@ -238,6 +265,7 @@
         return true;
       }
 
+      // Insere um elemento na posição especificada
       insere(pos, dado) {
         if (this.vazia() && pos !== 1 || isNaN(dado)) {
           alert('Posição inválida ou valor inválido.');
@@ -253,6 +281,7 @@
         }
       }
 
+      // Remove o primeiro elemento da lista unitária
       removeInicioListaUnitaria() {
         let dado = this.inicio.getConteudo();
         this.inicio = null;
@@ -261,6 +290,7 @@
         return dado;
       }
 
+      // Remove o primeiro elemento da lista
       removeInicioLista() {
         let p = this.inicio;
         let dado = p.getConteudo();
@@ -277,6 +307,7 @@
         return dado;
       }
 
+      // Remove um elemento do meio da lista
       removeMeioLista(pos) {
         let p = this.inicio;
         let n = 1;
@@ -307,6 +338,7 @@
         return dado;
       }
 
+      // Remove o último elemento da lista
       removeFimLista() {
         let p = this.fim;
         let dado = p.getConteudo();
@@ -325,6 +357,7 @@
         return dado;
       }
 
+      // Remove um elemento da posição especificada
       remove(pos) {
         if (this.vazia() || isNaN(pos)) {
           alert('Posição inválida ou lista vazia.');
@@ -343,12 +376,28 @@
       }
     }
 
+    // Cria uma nova lista duplamente encadeada e obtém o elemento HTML que irá exibir a lista
     const lista = new LDE();
     const listContainer = document.getElementById('listContainer');
 
     function renderizarLista() {
       listContainer.innerHTML = '';
       let aux = lista.inicio;
+
+      if (aux !== null) {
+        // Adiciona a cabeça
+        const cabeca = document.createElement('div');
+        cabeca.className = 'list-item';
+        cabeca.textContent = 'Cabeça';
+        listContainer.appendChild(cabeca);
+
+        // Adiciona seta da cabeça para o primeiro elemento
+        const arrowToFirst = document.createElement('span');
+        arrowToFirst.className = 'arrow';
+        arrowToFirst.textContent = '↔';
+        listContainer.appendChild(arrowToFirst);
+      }
+
       while (aux !== null) {
         const listItem = document.createElement('div');
         listItem.className = 'list-item';
@@ -364,8 +413,23 @@
 
         aux = aux.getProx();
       }
+
+      if (aux === null && lista.fim !== null) {
+        // Adiciona seta da cauda para o último elemento
+        const arrowToLast = document.createElement('span');
+        arrowToLast.className = 'arrow';
+        arrowToLast.textContent = '↔';
+        listContainer.appendChild(arrowToLast);
+
+        // Adiciona a cauda
+        const cauda = document.createElement('div');
+        cauda.className = 'list-item';
+        cauda.textContent = 'Cauda';
+        listContainer.appendChild(cauda);
+      }
     }
 
+    // Insere um elemento na lista
     function inserirElemento() {
       const pos = parseInt(prompt('Digite a posição de inserção:'));
       const valor = parseInt(prompt('Digite o valor a ser inserido:'));
@@ -376,6 +440,7 @@
       renderizarLista();
     }
 
+    // Remove um elemento da lista
     function removerElemento() {
       const pos = parseInt(prompt('Digite a posição de remoção:'));
       const valorRemovido = lista.remove(pos);
@@ -385,6 +450,7 @@
       renderizarLista();
     }
 
+    // Consulta um elemento por valor
     function consultarPorValor() {
       const valor = parseInt(prompt('Digite o valor a ser consultado:'));
       const posicao = lista.posicao(valor);
@@ -395,6 +461,7 @@
       }
     }
 
+    // Consulta um elemento por posição
     function consultarPorPosicao() {
       const pos = parseInt(prompt('Digite a posição a ser consultada:'));
       const elemento = lista.elemento(pos);
@@ -405,50 +472,56 @@
       }
     }
 
+    // Insere um elemento no início da lista
     function inserirInicio() {
       const valor = parseInt(prompt('Digite o valor a ser inserido no início:'));
       const sucesso = lista.insereInicioLista(valor);
       if (sucesso) {
-          alert('Elemento inserido no início com sucesso!');
+        alert('Elemento inserido no início com sucesso!');
       }
       renderizarLista();
     }
 
+    // Insere um elemento no final da lista
     function inserirFinal() {
       const valor = parseInt(prompt('Digite o valor a ser inserido no final:'));
       const sucesso = lista.insereFimLista(valor);
       if (sucesso) {
-          alert('Elemento inserido no final com sucesso!');
+        alert('Elemento inserido no final com sucesso!');
       }
       renderizarLista();
     }
 
+    // Remove o primeiro elemento da lista
     function removerInicio() {
-        if (lista.vazia()) {
-            alert('A lista está vazia. Não é possível remover do início.');
-            return;
-        }
-
-        const valorRemovido = lista.removeInicioLista();
-        if (valorRemovido !== -1) {
-            alert(`Elemento ${valorRemovido} removido do início com sucesso!`);
-        }
-        renderizarLista();
-    }
-
-    function removerFinal() {
-        if (lista.vazia()) {
-            alert('A lista está vazia. Não é possível remover do final.');
-            return;
-        }
-        const valorRemovido = lista.removeFimLista();
-        if (valorRemovido !== -1) {
-            alert(`Elemento ${valorRemovido} removido do final com sucesso!`);
-        }
-        renderizarLista();
+      if (lista.vazia()) {
+        alert('A lista está vazia. Não é possível remover do início.');
+        return;
       }
 
-    renderizarLista(); // Renderizar a lista inicial
+      const valorRemovido = lista.removeInicioLista();
+      if (valorRemovido !== -1) {
+        alert(`Elemento ${valorRemovido} removido do início com sucesso!`);
+      }
+      renderizarLista();
+    }
+
+    // Remove o último elemento da lista
+    function removerFinal() {
+      if (lista.vazia()) {
+        alert('A lista está vazia. Não é possível remover do final.');
+        return;
+      }
+      const valorRemovido = lista.removeFimLista();
+      if (valorRemovido !== -1) {
+        alert(`Elemento ${valorRemovido} removido do final com sucesso!`);
+      }
+      renderizarLista();
+    }
+
+    // Renderiza a lista inicial
+    renderizarLista();
   </script>
 </body>
+
 </html>
